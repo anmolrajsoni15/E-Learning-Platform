@@ -7,6 +7,19 @@ export async function POST (req:Request, {params}:{params: {courseId: string}}){
         
         const {userId} = auth();
         const {url} = await req.json();
+        
+        const data = url.toString();
+        console.log("data :- \t", data);
+        const splittedData = data.split("@")
+
+        const fileSize = Number(splittedData[2]);
+        const fileSizeInMB = Math.ceil((fileSize / (1024 * 1024))*100)/100;
+        const fileUrl = splittedData[0];
+        const fileName = splittedData[1];
+
+        // const data = value.split("+");
+        // console.log(data)
+        // const url = data[0];
 
         if(!userId){
             return new NextResponse("Unauthorized", {status: 401})
@@ -25,8 +38,9 @@ export async function POST (req:Request, {params}:{params: {courseId: string}}){
 
         const attachment = await db.attachment.create({
             data: {
-                url,
-                name: url.split("/").pop(),
+                url: fileUrl,
+                name: fileName,
+                size: fileSizeInMB,
                 courseId: params.courseId
             }
         });

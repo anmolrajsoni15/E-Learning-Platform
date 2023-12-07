@@ -11,6 +11,8 @@ import ChapterAccessForm from "./_components/ChapterAccessForm";
 import ChapterVideoForm from "./_components/ChapterVideoForm";
 import { Banner } from "@/components/banner";
 import ChapterActions from "./_components/ChapterActions";
+import VideoLengthForm from "./_components/VideoLengthForm";
+import { Separator } from "@/components/ui/separator";
 
 const page = async ({
   params,
@@ -50,7 +52,7 @@ const page = async ({
           label="This chapter is not published. It will not be visible to students."
         />
       )}
-      <div className="p-6">
+      <div className="p-8 pb-12 flex flex-col gap-8">
         <div className="flex items-center justify-between">
           <div className="w-full">
             <Link
@@ -61,9 +63,9 @@ const page = async ({
               Back to course setup
             </Link>
             <div className="flex items-center justify-between w-full">
-              <div className="flex flex-col gap-y-2">
-                <h1 className="text-2xl font-medium">Chapter Creation</h1>
-                <span className="text-sm text-slate-700">
+              <div className="flex flex-col gap-y-1">
+                <h1 className="text-xl font-semibold text-gray-900">Chapter Creation</h1>
+                <span className="text-sm text-slate-600">
                   Complete all fields {completionText}
                 </span>
               </div>
@@ -76,48 +78,21 @@ const page = async ({
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
-          <div className="space-y-4">
-            <div className="">
-              <div className="flex items-center gap-x-2">
-                <IconBadge icon={LayoutDashboard} />
-                <h2 className="text-xl">customize your chapter</h2>
-              </div>
-              <ChapterTitleForm
+        <Separator className="-mt-3 bg-gray-300" />
+        <div className="grid grid-cols-1 gap-5 w-full">
+          <div className="flex items-start justify-start gap-8 w-full">
+            <div className="flex flex-col justify-center items-start gap-x-2 w-[280px]">
+              <h2 className="text-sm font-medium text-gray-700">Chapter Details</h2>
+              <span className="text-sm font-normal text-gray-600">Customise title, description, etc.</span>
+            </div>
+            <ChapterTitleForm
                 initialData={chapter}
                 courseId={params.courseId}
                 chapterId={params.chapterId}
               />
-              <ChapterDiscriptionForm
-                initialData={chapter}
-                courseId={params.courseId}
-                chapterId={params.chapterId}
-              />
-            </div>
-            <div className="">
-              <div className="flex items-center gap-x-2">
-                <IconBadge icon={Eye} />
-                <h2 className="text-xl">Access Settings</h2>
-              </div>
-              <ChapterAccessForm
-                initialData={chapter}
-                courseId={params.courseId}
-                chapterId={params.chapterId}
-              />
-            </div>
-          </div>
-          <div className="">
-            <div className="flex items-center gap-x-2">
-              <IconBadge icon={Video} />
-              <h2 className="text-xl">Add a video</h2>
-            </div>
-            <ChapterVideoForm
-              initialData={chapter}
-              courseId={params.courseId}
-              chapterId={params.chapterId}
-            />
           </div>
         </div>
+        
       </div>
     </>
   );

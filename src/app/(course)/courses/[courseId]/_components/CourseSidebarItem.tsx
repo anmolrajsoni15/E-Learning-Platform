@@ -31,33 +31,35 @@ const CourseSidebarItem = ({
     router.push(`/courses/${courseId}/chapters/${id}`)
   }
 
+  const truncatedLabel = label.length > 15 ? label.substring(0, 15) + "..." : label
+
   return (
     <button
       type='button'
       onClick={onClick}
       className={cn(
-        "flex items-center gap-x-2 text-slate-500 text-sm font-[500] pl-6 transition-all hover:text-slate-600 hover:bg-slate-300/20",
-        isActive && "text-slate-700 bg-slate-200/20 hover:bg-slate-200/20 hover:text-slate-700",
-        isCompleted && "text-emerald-700 hover:text-emerald-700",
-        isCompleted && isActive && "bg-emerald-200/20"
+        "flex items-center gap-x-2 text-[#F2F4F7] text-sm font-[500] px-[12px] transition-all hover:text-[#F2F4F7] hover:bg-[#344054] rounded-[6px]",
+        isActive && "text-[#F2F4F7] bg-[#344054] hover:bg-[#344054] hover:text-white",
+        isCompleted && "text-[#039855] hover:text-[#039855]",
+        isCompleted && isActive && "bg-[#344054] text-[#039855]"
       )}
     >
-      <div className="flex flex-row items-center gap-x-2 py-4">
+      <div className="flex flex-row items-center gap-x-2 py-4  ">
         <Icon 
-          size={22}
+          size={24}
           className={cn(
-            "text-slate-500",
-            isActive && "text-slate-700",
-            isCompleted && "text-emerald-700"
+            "text-[#D8D8D8]",
+            isActive && "text-white",
+            isCompleted && "text-[#039855]"
           )}
         />
-        {label}
+        <div className="text-base font-medium">{truncatedLabel}</div>
       </div>
-      <div className={cn(
+      {/* <div className={cn(
         "ml-auto opacity-0 border-2 border-slate-700 h-full transition-all",
         isActive && "opacity-100",
         isCompleted && "border-emerald-700"
-      )}></div>
+      )}></div> */}
     </button>
   )
 }

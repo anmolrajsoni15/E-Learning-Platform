@@ -30,7 +30,7 @@ export const CourseProgress = ({
         variant={variant}
       />
       <p className={cn(
-        "font-medium mt-2 text-sky-700",
+        "font-medium mt-2 text-[#0369A1] text-right text-base",
         colorByVariant[variant || "default"],
         sizeByVariant[size || "default"],
       )}>

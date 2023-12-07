@@ -17,7 +17,13 @@ const FileUpload = ({
   return (
     <UploadDropzone
     endpoint={endpoint}
-    onClientUploadComplete={(res) => {onChange(res?.[0].url)}}
+    onClientUploadComplete={(res) => {
+      const onChangeData = {
+        value: `${res?.[0].url}@${res?.[0].name}@${res?.[0].size}`
+      };
+      console.log(res);
+      onChange(onChangeData.value);
+    }}
     onUploadError={(err) => {
         toast.error("Something went wrong.")
     }}

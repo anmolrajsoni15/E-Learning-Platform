@@ -29,9 +29,6 @@ const ChapterVideoForm = ({ initialData, courseId, chapterId }: Props) => {
 
   const toggleEdit = () => setIsEditing((current) => !current);
 
-  console.log(initialData)
-
-
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       await axios.patch(`/api/courses/${courseId}/chapters/${chapterId}`, values);
@@ -80,9 +77,12 @@ const ChapterVideoForm = ({ initialData, courseId, chapterId }: Props) => {
          <div className="">
             <FileUpload
               endpoint="chapterVideo"
-              onChange={(url)=>{
+              onChange={async(url)=>{
                 if(url){
-                    onSubmit({videoUrl: url});
+                  const splittedData = await url.split("@");
+                  const videoUrl = splittedData[0];
+                    console.log(url)
+                    onSubmit({videoUrl: videoUrl});
                 }
               }}
             />

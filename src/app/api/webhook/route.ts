@@ -18,6 +18,9 @@ export async function POST (req: Request){
   }
 
   const session = event.data.object as Stripe.Checkout.Session;
+
+  console.log("session metadata", session.metadata);
+
   const userId = session?.metadata?.userId;
   const courseId = session?.metadata?.courseId;
 

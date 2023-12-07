@@ -6,6 +6,8 @@ type CourseWithProgressWithCategory = Course & {
   category: Category | null;
   chapters: {id: string}[];
   progress: number | null;
+  totalChapters: number;
+  totalVideoLength: number;
 }
 
 interface Props {
@@ -26,6 +28,7 @@ const CoursesList = ({items}: Props) => {
             price={item.price!}
             progress={item.progress}
             category={item?.category?.name!}
+            totalVideoLength={item.totalVideoLength}
           />
         ))}
       </div>

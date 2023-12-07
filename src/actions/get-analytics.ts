@@ -32,7 +32,7 @@ export async function getAnalytics(userId: string){
       }
     })
 
-    const groupedEarnings = groupByCourse(purchases);
+    const groupedEarnings = groupByCourse(purchases.filter(purchase => purchase.course !== null) as PurchaseWithCourse[]);
     const data = Object.entries(groupedEarnings).map(([courseTitle, total]) => ({
       name: courseTitle,
       total: total,

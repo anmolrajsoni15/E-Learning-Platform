@@ -36,9 +36,9 @@ const CourseSidebar = async({
   })
 
   return (
-    <div className='h-full border-r flex flex-col overflow-y-auto shadow-sm'>
-      <div className="p-8 flex flex-col border-b">
-        <h1 className="font-semibold">
+    <div className='h-full w-full md:w-[280px] flex flex-col gap-6 overflow-y-auto bg-[#101828] text-white'>
+      <div className="p-8 flex flex-col border-b border-solid border-[#344054]">
+        <h1 className="font-semibold text-white text-lg">
         {course.title}
         </h1>
         {purchase && (
@@ -50,7 +50,7 @@ const CourseSidebar = async({
           </div>
         )}
       </div>
-      <div className="flex flex-col w-full">
+      <div className="flex flex-col w-full px-4 gap-2">
         {course.chapters.map((chapter) => (
           <CourseSidebarItem
             key={chapter.id}

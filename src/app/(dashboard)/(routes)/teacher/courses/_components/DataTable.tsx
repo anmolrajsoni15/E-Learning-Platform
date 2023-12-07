@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -11,9 +11,9 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table"
-import Link from "next/link"
-import { PlusCircle } from "lucide-react"
+} from "@tanstack/react-table";
+import Link from "next/link";
+import { PlusCircle } from "lucide-react";
 
 import {
   Table,
@@ -22,13 +22,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { DataTablePagination } from "./DataTablePagination";
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
 }
 
 export function DataTable<TData, TValue>({
@@ -36,7 +37,9 @@ export function DataTable<TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  );
 
   const table = useReactTable({
     data,
@@ -51,25 +54,54 @@ export function DataTable<TData, TValue>({
       sorting,
       columnFilters,
     },
-  })
+  });
 
   return (
-    <div>
-      <div className="flex items-center py-4 justify-between">
-        <Input
-          placeholder="Filter courses..."
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-        <Link href="/teacher/create">
-          <Button>
-            <PlusCircle className="h-4 w-4 mr-2" />
-            New course
+    <div className="border border-solid border-gray-300 rounded-lg">
+      <div className="p-5 text-lg font-semibold text-[#101828]">Courses</div>
+      <div className="flex items-center justify-between border-y border-solid border-gray-300 px-4 py-3">
+        <div className="border border-solid border-gray-300 rounded-[8px]">
+          <Button
+            onClick={() =>
+              table.getColumn("isPublished")?.setFilterValue(undefined)
+            }
+            variant="ghost"
+          >
+            View all
           </Button>
-        </Link>
+          <Button
+            onClick={() => table.getColumn("isPublished")?.setFilterValue(true)}
+            variant="ghost"
+            className="border-x rounded-[0px] border-solid border-gray-300"
+          >
+            Published
+          </Button>
+          <Button
+            onClick={() =>
+              table.getColumn("isPublished")?.setFilterValue(false)
+            }
+            variant="ghost"
+          >
+            Draft
+          </Button>
+        </div>
+        <div className="flex items-center gap-3 justify-between">
+          <Input
+            placeholder="Filter courses..."
+            value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+            onChange={(event) =>
+              table.getColumn("title")?.setFilterValue(event.target.value)
+            }
+            className="max-w-sm"
+          />
+
+          <Link href="/teacher/create">
+            <Button size="lg" className="px-2 w-[150px]" variant="enroll">
+              <PlusCircle className="h-4 w-4 mr-2" />
+              New course
+            </Button>
+          </Link>
+        </div>
       </div>
       <div className="rounded-md border">
         <Table>
@@ -86,7 +118,7 @@ export function DataTable<TData, TValue>({
                             header.getContext()
                           )}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -100,14 +132,20 @@ export function DataTable<TData, TValue>({
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
                   No results.
                 </TableCell>
               </TableRow>
@@ -115,24 +153,7 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Previous
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Next
-        </Button>
-      </div>
+      <DataTablePagination table={table} />
     </div>
-  )
+  );
 }

@@ -5,8 +5,13 @@ import { db } from "@/lib/db";
 
 type CourseWithProgressWithCategory = Course & {
   category: Category | null;
-  chapters: { id: string }[];
+  chapters: {
+    id: string;
+    videoLength: number | null; 
+}[];
   progress: number | null;
+  totalChapters: number;
+  totalVideoLength: number;
 };
 
 type GetCourses = {
@@ -37,6 +42,7 @@ export const getCourses = async ({
           },
           select: {
             id: true,
+            videoLength: true,
           }
         },
         purchases: {
@@ -52,9 +58,21 @@ export const getCourses = async ({
 
     const coursesWithProgress: CourseWithProgressWithCategory[] = await Promise.all(
       courses.map(async course => {
+        const totalVideoLength = course.chapters.reduce((acc, chapter) => {
+          if (!chapter.videoLength) {
+            return acc;
+          }
+
+          return acc + chapter.videoLength;
+        }, 0);
+
+        const totalChapters = course.chapters.length;
+
         if (course.purchases.length === 0) {
           return {
             ...course,
+            totalVideoLength,
+            totalChapters,
             progress: null,
           }
         }
@@ -63,6 +81,8 @@ export const getCourses = async ({
 
         return {
           ...course,
+          totalVideoLength,
+          totalChapters,
           progress: progressPercentage,
         };
       })

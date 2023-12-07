@@ -14,6 +14,7 @@ const NavbarRoutes = () => {
   const isTeacherPage = pathname?.startsWith("/teacher");
   const isStudentPage = pathname?.includes("/courses");
   const isSearchPage = pathname === "/search"
+  const isChapterPage = pathname?.includes("/chapters");
 
   return (
     <>
@@ -35,9 +36,11 @@ const NavbarRoutes = () => {
           <Button size="sm" variant="ghost">Teacher Mode</Button>
         </Link>
       )}
-      <UserButton
+      {isChapterPage ? null : (
+        <UserButton
         afterSignOutUrl="/"
        />
+      )}
     </div>
     </>
   );

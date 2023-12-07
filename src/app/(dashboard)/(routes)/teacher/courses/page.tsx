@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import React from 'react'
 import { DataTable } from './_components/DataTable'
-import { columns } from './_components/columns'
+import { Columns } from './_components/columns'
 
 const page = async() => {
 
@@ -29,7 +29,7 @@ const page = async() => {
             New Course
         </Button>
         </Link> */}
-        <DataTable columns={columns} data={courses} />
+        <DataTable columns={Columns} data={courses} />
     </div>
   )
 }

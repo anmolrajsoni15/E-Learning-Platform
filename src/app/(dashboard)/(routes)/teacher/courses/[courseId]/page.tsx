@@ -18,6 +18,7 @@ import AttachmentForm from "./_components/AttachmentForm";
 import ChaptersForm from "./_components/ChaptersForm";
 import { Banner } from "@/components/banner";
 import Actions from "./_components/Actions";
+import { Separator } from "@/components/ui/separator";
 
 const page = async ({ params }: { params: { courseId: string } }) => {
   const { userId } = auth();
@@ -30,7 +31,7 @@ const page = async ({ params }: { params: { courseId: string } }) => {
       userId,
     },
     include: {
-      chapters:{
+      chapters: {
         orderBy: {
           position: "asc",
         },
@@ -51,13 +52,17 @@ const page = async ({ params }: { params: { courseId: string } }) => {
 
   if (!course) return redirect("/");
 
-  const requiredFields = [
+  const courseDetailsRequiredFields = [
     course.title,
     course.description,
-    course.price,
     course.image,
     course.categoryId,
-    course.chapters.some(chapter => chapter.isPublished)
+    course.price,
+  ];
+
+  const requiredFields = [
+    courseDetailsRequiredFields.every(Boolean),
+    course.chapters.some((chapter) => chapter.isPublished),
   ];
 
   const totalFields = requiredFields.length;
@@ -65,75 +70,79 @@ const page = async ({ params }: { params: { courseId: string } }) => {
 
   const completionText = `(${completedFields}/${totalFields}) fields completed`;
 
-  const isComplete = requiredFields.every(Boolean);
+  const isComplete =
+    requiredFields.every(Boolean) && courseDetailsRequiredFields.every(Boolean);
 
   return (
     <>
-    {
-      !course.isPublished && (
+      {!course.isPublished && (
         <Banner
           variant="warning"
           label="This course is not published. It will not be visible to students."
         />
-      )
-    }
-    <div className="p-6">
-      <div className="flex items-center justify-between">
-        <div className="flex flex-col gap-y-2">
-          <h1 className="text-2xl font-medium">Course Setup</h1>
-          <span className="text-sm text-slate-700">
-            Complete all fields {completionText}{" "}
-          </span>
-        </div>
-        <Actions
-          disabled={!isComplete}
-          courseId={params.courseId}
-          isPublished={course.isPublished}
-        />
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">
-        <div className="">
-          <div className="flex items-center gap-x-2">
-            <IconBadge icon={LayoutDashboard} />
-            <h2 className="text-xl">Customize your course</h2>
+      )}
+      <div className="p-8 pb-12 flex flex-col gap-8">
+        <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-y-1">
+            <h1 className="text-xl font-semibold text-gray-900">
+              Course Setup
+            </h1>
+            <span className="text-sm text-slate-600">
+              Complete all fields {completionText}{" "}
+            </span>
           </div>
-          <TitleForm initialData={course} courseId={course.id} />
-          <DiscriptionForm initialData={course} courseId={course.id} />
-          <ImageForm initialData={course} courseId={course.id} />
-          <CategoryForm
-            initialData={course}
-            courseId={course.id}
-            options={categories.map((category) => ({
-              label: category.name,
-              value: category.id,
-            }))}
+          <Actions
+            disabled={!isComplete}
+            courseId={params.courseId}
+            isPublished={course.isPublished}
           />
         </div>
-        <div className="space-y-6">
-          <div className="">
-            <div className="flex items-center gap-x-2">
-              <IconBadge icon={ListChecks} />
-              <h2 className="text-xl">Course chapters</h2>
+        <Separator className="-mt-3 bg-gray-300" />
+        <div className="grid grid-cols-1 gap-5 w-full">
+          <div className="flex items-start justify-start gap-8 w-full">
+            <div className="flex flex-col justify-center items-start gap-x-2 w-[280px]">
+              <h2 className="text-sm font-medium text-gray-700">
+                Course Details
+              </h2>
+              <span className="text-sm font-normal text-gray-600">
+                Customise title, description, etc.
+              </span>
+            </div>
+            <TitleForm
+              initialData={course}
+              courseId={course.id}
+              options={categories.map((category) => ({
+                label: category.name,
+                value: category.id,
+              }))}
+            />
+          </div>
+          <Separator className=" bg-gray-300" />
+          <div className="flex items-start justify-start gap-8 w-full">
+            <div className="flex flex-col justify-center items-start gap-x-2 w-[280px]">
+              <h2 className="text-sm font-medium text-gray-700">
+                Course Structure
+              </h2>
+              <span className="text-sm font-normal text-gray-600">
+                Add and arrange chapters
+              </span>
             </div>
             <ChaptersForm initialData={course} courseId={course.id} />
           </div>
-          <div className="">
-            <div className="flex items-center gap-x-2">
-              <IconBadge icon={CircleDollarSign} />
-              <h2 className="text-xl">Sell your course</h2>
-            </div>
-            <PriceForm initialData={course} courseId={course.id} />
-          </div>
-          <div className="">
-            <div className="flex items-center gap-x-2">
-              <IconBadge icon={File} />
-              <h2 className="text-xl">Resourses and Attachments</h2>
+          <Separator className=" bg-gray-300" />
+          <div className="flex items-start justify-start gap-8 w-full">
+            <div className="flex flex-col justify-center items-start gap-x-2 w-[280px]">
+              <h2 className="text-sm font-medium text-gray-700">
+                Resources and Attachments
+              </h2>
+              <span className="text-sm font-normal text-gray-600">
+                Integrate supplementary materials.
+              </span>
             </div>
             <AttachmentForm initialData={course} courseId={course.id} />
           </div>
         </div>
       </div>
-    </div>
     </>
   );
 };

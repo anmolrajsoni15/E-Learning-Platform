@@ -4,10 +4,10 @@ const {withUt} = require("uploadthing/tw");
 module.exports = withUt({
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
+    './pages/**/*.{ts,tsx,jsx}',
+    './components/**/*.{ts,tsx,jsx}',
+    './app/**/*.{ts,tsx,jsx}',
+    './src/**/*.{ts,tsx,jsx}',
 	],
   theme: {
     container: {
@@ -24,6 +24,7 @@ module.exports = withUt({
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        inputShadow: "#D8F0FF",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",

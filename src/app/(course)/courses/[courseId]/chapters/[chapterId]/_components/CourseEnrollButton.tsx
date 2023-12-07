@@ -31,8 +31,9 @@ const CourseEnrollButton = ({ price, courseId }: Props) => {
     <Button
       onClick={onClick}
       disabled={isLoading}
-      size="sm"
-      className="w-full md:w-auto"
+      size="lg"
+      className="w-full md:w-auto text-base font-semibold"
+      variant='enroll'
     >
       Enroll for {formatPrice(price)}
     </Button>

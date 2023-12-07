@@ -82,5 +82,26 @@ html, body, :root {
 .ql-container{
   font-size: 16px !important;
 }
+.curved-div {
+  width: 100px; /* Adjust as necessary */
+  height: 100px; /* Adjust as necessary */
+  background-color: yellow; /* This is the color of your shape */
+  -webkit-clip-path: url(#curved-hypotenuse);
+  clip-path: url(#curved-hypotenuse);
+}
+
+.banner{
+  background: linear-gradient(267deg, #10202C -0.44%, #0D4769 136.05%);
+}
+
+.ql-toolbar{
+  border-top-left-radius: 8px !important;
+  border-top-right-radius: 8px !important;
+}
+
+.ql-container{
+  border-bottom-left-radius: 8px !important;
+  border-bottom-right-radius: 8px !important;
+}
 
 @import "~@uploadthing/react/styles.css"

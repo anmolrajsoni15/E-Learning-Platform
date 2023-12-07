@@ -1,13 +1,18 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, Poppins } from 'next/font/google'
 import { ClerkProvider } from '@clerk/nextjs'
 import NextTopLoader from 'nextjs-toploader'
+import { Providers } from './Redux/provider'
 
 import './globals.css'
 import { ToastProvider } from '@/components/providers/ToastProvider'
 import { ConfettiProvider } from '@/components/providers/confetti-provider'
 
 const inter = Inter({ subsets: ['latin'] })
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: '100'
+})
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -26,7 +31,9 @@ export default function RootLayout({
         <ConfettiProvider />
         <ToastProvider />
         <NextTopLoader />
+        <Providers>
         {children}
+        </Providers>
       </body>
     </html>
     </ClerkProvider>

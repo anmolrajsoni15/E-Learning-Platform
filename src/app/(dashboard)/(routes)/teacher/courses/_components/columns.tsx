@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { Course } from "@prisma/client"
-import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown, MoreHorizontal, Pencil } from "lucide-react"
+import { Course } from "@prisma/client";
+import { ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -10,24 +10,54 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import React, { useState } from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 
-export const columns: ColumnDef<Course>[] = [
+export const Columns: ColumnDef<Course>[] = [
   {
-    accessorKey: "title",
+    id: "ImageAndTitle",
+    accessorFn: (row) => {
+      const title = row?.title || "";
+      const image = row?.image || "";
+
+      return [{ title: title }, { image: image }];
+    },
+
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Title
+          Image
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
+    },
+
+    cell: ({ row }) => {
+      const data: Course = row.original;
+      return (
+        <div className="flex items-center space-x-4">
+          <div className="flex-shrink-0 w-10 h-10">
+            <Image
+              className="w-10 h-10 rounded-full"
+              src={data.image || ""}
+              width={40}
+              height={40}
+              alt=""
+            />
+          </div>
+          <div className="text-sm font-medium text-gray-900">{data.title}</div>
+        </div>
+      );
     },
   },
   {
@@ -41,17 +71,17 @@ export const columns: ColumnDef<Course>[] = [
           Price
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
       const price = parseFloat(row.getValue("price") || "0");
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
-        currency: "INR"
+        currency: "INR",
       }).format(price);
 
-      return <div>{formatted}</div>
-    }
+      return <div>{formatted}</div>;
+    },
   },
   {
     accessorKey: "isPublished",
@@ -64,25 +94,33 @@ export const columns: ColumnDef<Course>[] = [
           Published
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
       const isPublished = row.getValue("isPublished") || false;
 
       return (
-        <Badge className={cn(
-          "bg-slate-500",
-          isPublished && "bg-sky-700"
-        )}>
+        <Badge className={cn("bg-slate-500", isPublished && "bg-sky-700")}>
           {isPublished ? "Published" : "Draft"}
         </Badge>
-      )
-    }
+      );
+    },
   },
   {
     id: "actions",
     cell: ({ row }) => {
       const { id } = row.original;
+
+      const onDelete = async () => {
+        try {
+          await axios.delete(`/api/courses/${id}`);
+
+          toast.success("Course deleted successfully");
+          window.location.reload();
+        } catch {
+          toast.error("Something went wrong");
+        }
+      };
 
       return (
         <DropdownMenu>
@@ -99,9 +137,13 @@ export const columns: ColumnDef<Course>[] = [
                 Edit
               </DropdownMenuItem>
             </Link>
+            <DropdownMenuItem onClick={onDelete}>
+              <Trash2 className="h-4 w-4 mr-2" />
+              Delete
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      )
-    }
-  }
-]
+      );
+    },
+  },
+];

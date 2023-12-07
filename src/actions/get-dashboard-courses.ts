@@ -6,6 +6,8 @@ type CourseWithProgressWithCategory = Course & {
   category: Category;
   chapters: Chapter[];
   progress: number | null;
+  totalChapters: number;
+  totalVideoLength: number;
 }
 
 type DashboardCourses = {
@@ -31,10 +33,12 @@ export const getDashboardCourses = async(userId: string) : Promise<DashboardCour
             }
           }
         }
-      })
+      });
 
-      const courses = purchasedCourses.map((purchase)=> purchase.course) as CourseWithProgressWithCategory[];
-
+      const courses = purchasedCourses
+      .filter(purchase => purchase.course !== null)
+      .map(purchase => purchase.course) as CourseWithProgressWithCategory[];
+      
       for(let course of courses){
         const progress = await getProgress(userId, course.id);
         course["progress"] = progress;

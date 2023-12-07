@@ -57,6 +57,8 @@ export async function PATCH(req:Request, {params}:{params:{courseId:string}}) {
         const values = await req.json();
         if(!userId) return new NextResponse("Unauthorized", { status: 401 });
 
+        console.log("values :- \t", values)
+
         const course = await db.course.update({
             where: { id: courseId, userId },
             data: {
@@ -64,6 +66,8 @@ export async function PATCH(req:Request, {params}:{params:{courseId:string}}) {
                 updatedAt: new Date().toISOString(),
             },
         })
+
+        console.log("course :- \t", course);
 
         return new NextResponse(JSON.stringify(course), { status: 200 });
 
